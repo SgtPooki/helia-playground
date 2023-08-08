@@ -389,16 +389,16 @@ export class DefaultDCUtRService implements Startable {
     }
 
     try {
-      logA.trace('acknowledging stream from B')
+      logA.trace('acknowledging stream from B %s', relayedConnection.remotePeer)
       const pb = pbStream(stream, {
         maxDataLength: MAX_DCUTR_MESSAGE_SIZE
       }).pb(HolePunch)
 
-      logA.trace('waiting for CONNECT from B')
+      logA.trace('waiting for CONNECT from B %s', relayedConnection.remotePeer)
       // 3. Upon receiving the Connect, A responds back with a Connect message
       // containing its observed (and possibly predicted) addresses.
       const connect = await pb.read(options)
-      logA.trace('received CONNECT from B')
+      logA.trace('received CONNECT from B %s', relayedConnection.remotePeer)
 
       if (connect.type !== HolePunch.Type.CONNECT) {
         logA.error('B sent wrong message type')
@@ -417,20 +417,20 @@ export class DefaultDCUtRService implements Startable {
         throw new CodeError('DCUtR connect message had no dialable multiaddrs', codes.ERR_INVALID_MESSAGE)
       }
 
-      logA.trace('sending CONNECT to B')
+      logA.trace('sending CONNECT to B %s', relayedConnection.remotePeer)
       await pb.write({
         type: HolePunch.Type.CONNECT,
         observedAddresses: this.addressManager.getAddresses().map(ma => ma.bytes)
       })
 
-      logA.trace('waiting for message SYNC from B')
+      logA.trace('waiting for message SYNC from B %s', relayedConnection.remotePeer)
       const sync = await pb.read(options)
 
       if (sync.type !== HolePunch.Type.SYNC) {
         logA.error('B sent the wrong message type')
         throw new CodeError('DCUtR message type was incorrect', codes.ERR_INVALID_MESSAGE)
       }
-      logA.trace('received SYNC from B')
+      logA.trace('received SYNC from B %s', relayedConnection.remotePeer)
 
       // TODO: when we have a QUIC transport, the dial step is different - for
       // now we only have tcp support

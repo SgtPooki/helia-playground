@@ -66,6 +66,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   const nodeIdEl = document.getElementById("nodeId");
   nodeIdEl.innerHTML = id;
 
+  async function addFile () {
+    const textEncoder = new TextEncoder()
+    const cid = await heliaFs.addFile({content: textEncoder.encode('rsd - sgtpooki - 2023-08-07 Hello world!')})
+    console.log('successfully stored', cid.toString())
+    return cid
+  }
+
+  setTimeout(async () => {
+    const cid = await addFile()
+    for await (const data of helia.libp2p.services.dht.provide(cid)) {
+      console.log('provide data', data)
+    }
+    for await (const provs of helia.libp2p.services.dht.findProviders(cid)) {
+      console.log('found providers', provs)
+    }
+  }, 65000)
+
+  // await helia.libp2p.services.dht
+
   /**
    * You can write more code here to use it.
    *
@@ -79,11 +98,11 @@ document.addEventListener("DOMContentLoaded", async () => {
    * - heliaFs.ls
    * - heliaFs.cat
    */
-  const testcid = CID.parse('QmVXy4WyMaz4ajm2LUUjyu33cH7UDdytHvctdYmchdvdMy')
+  // const testcid = CID.parse('QmVXy4WyMaz4ajm2LUUjyu33cH7UDdytHvctdYmchdvdMy')
 
-  const pin = await helia.pins.add(testcid, {
-      onProgress: (evt) => console.log(`pin event ${evt.detail?.name}:`, evt)
-  });
+  // const pin = await helia.pins.add(testcid, {
+  //     onProgress: (evt) => console.log(`pin event ${evt.detail?.name}:`, evt)
+  // });
 });
 
 function ms2TimeString(a) {
@@ -118,29 +137,6 @@ const addToLog = (msg) => {
 };
 
 let heliaInstance = null;
-/**
- *
- * @returns {Helia}
- */
-const createHelia = async () => {
-  // application-specific data lives in the datastore
-  const datastore = new LevelDatastore('helia-example-datastore');
-  const blockstore = new LevelBlockstore('helia-example-blockstore');
-
-  if (heliaInstance != null) {
-    return heliaInstance;
-  }
-
-  heliaInstance = await InstantiateHelia({
-    datastore,
-    blockstore,
-    libp2p: libp2pDefaults()
-  });
-  addToLog("Created Helia instance");
-
-  return heliaInstance;
-};
-
 window.discoveredPeers = new Map();
 
 const updateConnectedPeers = () => {

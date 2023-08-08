@@ -1,0 +1,28 @@
+import { createHelia } from 'helia';
+import { MemoryDatastore } from "datastore-core";
+import { MemoryBlockstore } from "blockstore-core";
+import { LevelDatastore } from "datastore-level";
+import { LevelBlockstore } from 'blockstore-level';
+import type { Helia } from '@helia/interface';
+
+import { libp2pDefaults } from './libp2p';
+
+let heliaInstance: Helia | null = null;
+export default async () => {
+  // application-specific data lives in the datastore
+  const datastore = new LevelDatastore('helia-example-datastore');
+  const blockstore = new LevelBlockstore('helia-example-blockstore');
+
+  if (heliaInstance != null) {
+    return heliaInstance;
+  }
+
+  heliaInstance = await createHelia({
+    datastore,
+    blockstore,
+    libp2p: libp2pDefaults()
+  });
+  // addToLog("Created Helia instance");
+
+  return heliaInstance;
+};

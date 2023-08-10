@@ -1,20 +1,21 @@
 diff --git a/node_modules/@libp2p/interface-internal/dist/src/connection-manager/index.d.ts b/node_modules/@libp2p/interface-internal/dist/src/connection-manager/index.d.ts
-index 14d3f8c..8e6d2a9 100644
+index 14d3f8c..5c51718 100644
 --- a/node_modules/@libp2p/interface-internal/dist/src/connection-manager/index.d.ts
 +++ b/node_modules/@libp2p/interface-internal/dist/src/connection-manager/index.d.ts
-@@ -3,6 +3,11 @@ import type { Connection, MultiaddrConnection } from '@libp2p/interface/connecti
+@@ -3,6 +3,12 @@ import type { Connection, MultiaddrConnection } from '@libp2p/interface/connecti
  import type { PeerId } from '@libp2p/interface/peer-id';
  import type { PeerMap } from '@libp2p/peer-collections';
  import type { Multiaddr } from '@multiformats/multiaddr';
 +
 +export interface OpenConnectionOptions extends AbortOptions {
 +  priority?: number
++  force?: boolean
 +}
 +
  export interface ConnectionManager {
      /**
       * Return connections, optionally filtering by a PeerId
-@@ -34,7 +39,7 @@ export interface ConnectionManager {
+@@ -34,7 +40,7 @@ export interface ConnectionManager {
       * const connection = await libp2p.connectionManager.openConnection(peerId)
       * ```
       */

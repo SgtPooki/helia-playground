@@ -24,3 +24,16 @@ index 11bda5d..2490f0b 100644
  /**
   * Responsible for managing known connections.
   */
+diff --git a/node_modules/libp2p/dist/src/connection-manager/index.js b/node_modules/libp2p/dist/src/connection-manager/index.js
+index fa40713..8b57329 100644
+--- a/node_modules/libp2p/dist/src/connection-manager/index.js
++++ b/node_modules/libp2p/dist/src/connection-manager/index.js
+@@ -300,7 +300,7 @@ export class DefaultConnectionManager {
+         }
+         options.signal?.throwIfAborted();
+         const { peerId } = getPeerAddress(peerIdOrMultiaddr);
+-        if (peerId != null) {
++        if (peerId != null && options.force !== true) {
+             log('dial %p', peerId);
+             const existingConnections = this.getConnections(peerId);
+             if (existingConnections.length > 0) {

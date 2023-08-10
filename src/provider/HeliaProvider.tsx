@@ -89,10 +89,12 @@ export const HeliaProvider = ({ children }) => {
   }, [helia])
 
   useEffect(() => {
-    if (helia == null) {
+    if (helia == null || fs == null) {
       return
     }
-    (window as any).helia = helia
+    (window as any).helia = helia;
+    (window as any).heliaFs = fs;
+
     let timeoutId: any = null
     const refreshFn = async () => {
       updateInfo()
@@ -122,7 +124,7 @@ export const HeliaProvider = ({ children }) => {
       clearTimeout(timeoutId)
     }
 
-  }, [helia])
+  }, [helia, fs, updateInfo])
 
 
   return (

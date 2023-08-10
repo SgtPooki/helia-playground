@@ -290,7 +290,8 @@ export class DefaultDCUtRService implements Startable {
     })
     const newDirectConnection = await this.connectionManager.openConnection(multiaddrs, {
       signal,
-      priority: DCUTR_DIAL_PRIORITY
+      priority: DCUTR_DIAL_PRIORITY,
+      force: true
     })
     // if (tcpMultiaddrs.length > 0) {
     //   connectAttempts.push(this.simultaneousConnectTCP(tcpMultiaddrs, simulConnectAbortController.signal))

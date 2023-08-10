@@ -7,8 +7,8 @@ import { type DualKadDHT, kadDHT } from '@libp2p/kad-dht'
 import { mplex } from '@libp2p/mplex'
 import { webRTC, webRTCDirect } from '@libp2p/webrtc'
 import { webSockets } from '@libp2p/websockets'
-// import { webTransport } from '@libp2p/webtransport'
-import { webTransport } from './webtransport'
+import { webTransport } from '@libp2p/webtransport'
+// import { webTransport } from './webtransport'
 import { ipnsSelector } from 'ipns/selector'
 import { ipnsValidator } from 'ipns/validator'
 import { autoNATService } from 'libp2p/autonat'
@@ -56,12 +56,12 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
       ipniContentRouting('https://cid.contact')
     ],
     services: {
-      dcutr: dcutrService(),
+      dcutr: dcutrService({ timeout: 15000 }),
       identify: identifyService(),
       autoNAT: autoNATService(),
       // pubsub: gossipsub(),
       dht: kadDHT({
-        clientMode: true,
+        clientMode: false,
         validators: {
           ipns: ipnsValidator
         },

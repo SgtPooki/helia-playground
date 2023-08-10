@@ -346,11 +346,11 @@ export class DefaultDCUtRService implements Startable {
       .map(address => address.multiaddr)
 
     var difference = function (a1, a2) {
-      return new Set([...a1].filter(x => !a2.has(x)))
+      return a1.filter(x => !a2.has(x))
     }
     const publicAddressStrings = publicAddresses.map(String).sort()
     const peerInfoAddressStrings = peerInfo.addresses.map(add => add.multiaddr).map(String).sort()
-    const addressDiff = difference(new Set(publicAddressStrings), new Set(peerInfoAddressStrings))
+    const addressDiff = difference(peerInfoAddressStrings, new Set(publicAddressStrings))
     logB.trace('unilateral addresses removed', addressDiff)
     logB.trace('unilateral public Addresses left', publicAddressStrings)
 

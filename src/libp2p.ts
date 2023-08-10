@@ -61,7 +61,8 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
       autoNAT: autoNATService(),
       // pubsub: gossipsub(),
       dht: kadDHT({
-        clientMode: false,
+        kBucketSize: 60,
+        clientMode: true,
         validators: {
           ipns: ipnsValidator
         },

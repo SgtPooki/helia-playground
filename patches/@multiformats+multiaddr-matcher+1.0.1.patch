@@ -1,0 +1,17 @@
+diff --git a/node_modules/@multiformats/multiaddr-matcher/dist/src/index.js b/node_modules/@multiformats/multiaddr-matcher/dist/src/index.js
+index bd54a81..aa7513a 100644
+--- a/node_modules/@multiformats/multiaddr-matcher/dist/src/index.js
++++ b/node_modules/@multiformats/multiaddr-matcher/dist/src/index.js
+@@ -447,7 +447,11 @@ const _P2P = or(_WebSockets, _WebSocketsSecure, and(_TCP, optional(peerId())), a
+  * ```
+  */
+ export const P2P = fmt(_P2P);
+-const _Circuit = and(_P2P, literal('p2p-circuit'), peerId());
++
++const _Circuit = or(
++  and(_P2P, literal('p2p-circuit')),
++  and(_P2P, literal('p2p-circuit'), peerId()),
++)
+ /**
+  * Matches circuit relay addresses
+  *

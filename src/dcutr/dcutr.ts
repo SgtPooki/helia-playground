@@ -345,6 +345,16 @@ export class DefaultDCUtRService implements Startable {
     })
       .map(address => address.multiaddr)
 
+    var difference = function (a1, a2) {
+      return new Set([...a1].filter(x => !a2.has(x)))
+    }
+    const publicAddressStrings = publicAddresses.map(String).sort()
+    const peerInfoAddressStrings = peerInfo.addresses.map(add => add.multiaddr).map(String).sort()
+    const addressDiff = difference(new Set(publicAddressStrings), new Set(peerInfoAddressStrings))
+    logB.trace('unilateral addresses removed', addressDiff)
+    logB.trace('unilateral public Addresses left', publicAddressStrings)
+
+
     if (publicAddresses.length > 0) {
       logB.trace('peer %p has public addresses, attempting unilateral connection upgrade', relayedConnection.remotePeer)
       const signal = AbortSignal.timeout(this.timeout)
@@ -355,7 +365,9 @@ export class DefaultDCUtRService implements Startable {
         // dial the multiaddr(s), otherwise `connectionManager.openConnection`
         // will return the existing relayed connection
         await this.connectionManager.openConnection(publicAddresses, {
-          signal
+          signal,
+          priority: DCUTR_DIAL_PRIORITY,
+          force: true
         })
 
         logB.trace('unilateral connection upgrade to %p succeeded, closing relayed connection', relayedConnection.remotePeer)
@@ -368,7 +380,7 @@ export class DefaultDCUtRService implements Startable {
 
         return true
       } catch (err) {
-        logB.error('Could not unilaterally upgrade connection to advertised public address(es)', publicAddresses, err)
+        logB.error('Could not unilaterally upgrade connection to advertised public address(es)', publicAddresses.map(String), err)
       }
     } else {
       logB.trace('peer %p has no public addresses, not attempting unilateral connection upgrade', relayedConnection.remotePeer)
@@ -441,7 +453,8 @@ export class DefaultDCUtRService implements Startable {
       logA.trace('dialing', multiaddrs)
       const newDirectConnection = await this.connectionManager.openConnection(multiaddrs, {
         signal: options.signal,
-        priority: DCUTR_DIAL_PRIORITY
+        priority: DCUTR_DIAL_PRIORITY,
+        force: true,
       })
       logA.trace('dialing succeeded. connection ID =', newDirectConnection.id)
 

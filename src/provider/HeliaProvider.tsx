@@ -21,7 +21,8 @@ export interface HeliaContext {
   nodeId: string | null,
   discoveredPeers: any[],
   connectedPeers: any[],
-  multiaddrs: any[]
+  multiaddrs: any[],
+  events: string[]
 }
 
 const defaultContextValues: HeliaContext = {
@@ -34,7 +35,8 @@ const defaultContextValues: HeliaContext = {
   nodeId: null,
   discoveredPeers: [],
   connectedPeers: [],
-  multiaddrs: []
+  multiaddrs: [],
+  events: []
 }
 export const HeliaContext = createContext(defaultContextValues)
 
@@ -49,6 +51,7 @@ export const HeliaProvider = ({ children }) => {
   const [discoveredPeers, setDiscoveredPeers] = useState<HeliaContext['discoveredPeers']>([])
   const [connectedPeers, setConnectedPeers] = useState<HeliaContext['connectedPeers']>([])
   const [multiaddrs, setMultiaddrs] = useState<HeliaContext['multiaddrs']>([])
+  const [events, setEvents] = useState<HeliaContext['events']>([])
 
   const startHelia = useCallback(async () => {
     if (helia) {
@@ -114,17 +117,17 @@ export const HeliaProvider = ({ children }) => {
 
     helia.libp2p.addEventListener("peer:discovery", (evt) => {
       setDiscoveredPeers((prev) => [...prev, evt.detail])
-      console.log(`Discovered peer ${evt.detail.id.toString()}`);
+      setEvents((prev) => [...prev, `Discovered peer ${evt.detail.id.toString()}`])
     });
 
     helia.libp2p.addEventListener("peer:connect", (evt) => {
-      console.log(`Connected to ${evt.detail.toString()}`);
+      setEvents((prev) => [...prev, `Connected to ${evt.detail.toString()}`])
       setConnectedPeers((prev) => [...prev, evt.detail])
       setMultiaddrs(helia.libp2p.getMultiaddrs())
     });
 
     helia.libp2p.addEventListener("peer:disconnect", (evt) => {
-      console.log(`Disconnected from ${evt.detail.toString()}`);
+      setEvents((prev) => [...prev, `Disconnected from ${evt.detail.toString()}`])
       setConnectedPeers((prev) => prev.filter((peer) => peer.toString() !== evt.detail.toString()))
       setMultiaddrs(helia.libp2p.getMultiaddrs())
     });
@@ -149,7 +152,8 @@ export const HeliaProvider = ({ children }) => {
         nodeId,
         discoveredPeers,
         connectedPeers,
-        multiaddrs
+        multiaddrs,
+        events
       }}
     >{children}</HeliaContext.Provider>
   )

@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { useHelia } from './hooks/useHelia';
 import StatusText from './components/StatusText';
 import NodeInfo from './components/NodeInfo';
+import EventLog from './components/EventLog';
 
 export default function App() {
-  const { error, starting, helia } = useHelia()
+  const { helia } = useHelia()
 
   const startHelia = async () => {
     if (helia != null) {
@@ -105,8 +106,7 @@ for await (const event of helia.libp2p.services.dht.provide(cid)) {
     <pre><code className="language-javascript">{dhtProvideExample}</code></pre>
 
     <hr />
-    <h2>Event Log:</h2>
-    <article id="runningLog"></article>
+    <EventLog />
 
     </>
   )

@@ -57,6 +57,12 @@ export const HeliaProvider = ({ children }) => {
 
     }
   }, [])
+  const onBeforeUnload = useCallback(async () => {
+    if (helia != null) {
+      console.info('Stopping Helia')
+      await helia.stop()
+    }
+  }, [helia])
 
   useEffect(() => {
     if (helia != null) {
@@ -69,12 +75,16 @@ export const HeliaProvider = ({ children }) => {
         setHelia(helia)
         setFs(unixfs(helia))
         setNodeId(helia.libp2p.peerId.toString())
+        window.addEventListener('beforeunload', onBeforeUnload)
       } catch (e) {
         console.error(e)
         setError(true)
       }
     }
     effect()
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload)
+    }
   }, [])
 
   const updateInfo = useCallback(async () => {

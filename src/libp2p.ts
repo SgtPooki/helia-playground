@@ -61,6 +61,8 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
       autoNAT: autoNATService(),
       // pubsub: gossipsub(),
       dht: kadDHT({
+        pingTimeout: 1000,
+        pingConcurrency: 3,
         kBucketSize: 60,
         clientMode: true,
         validators: {

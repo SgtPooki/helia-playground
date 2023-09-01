@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import { useHelia } from './hooks/useHelia';
 import StatusText from './components/StatusText';
 import NodeInfo from './components/NodeInfo';
@@ -7,18 +7,8 @@ import FetchContent from './components/userUtils/FetchContent';
 import { Box, Button, Code, Heading, VStack, Container, StackDivider, UnorderedList, ListItem } from '@chakra-ui/react'
 
 export default function App() {
-  const { helia } = useHelia()
+  const { helia, starting, status } = useHelia()
 
-  const startHelia = async () => {
-    if (helia != null) {
-      await helia.start();
-    }
-  }
-  const stopHelia = async () => {
-    if (helia != null) {
-      await helia.stop();
-    }
-  }
 
   const addFileExample = `
 async function addFile () {
@@ -75,12 +65,8 @@ for await (const event of helia.libp2p.services.dht.provide(cid)) {
           identity, which is a Bad Idea.
         </p>
       </Box>
-      <Box textAlign={"left"}>
+      <Box>
         <StatusText />
-        <Box>
-          <Button onClick={startHelia} backgroundColor="green.200">Start Helia</Button>
-          <Button onClick={stopHelia} backgroundColor="red.200">Stop Helia</Button>
-        </Box>
         <NodeInfo />
       </Box>
 

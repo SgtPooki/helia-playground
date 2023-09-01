@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHelia } from '../hooks/useHelia.ts';
+import { Box, Heading, List, ListItem } from '@chakra-ui/react';
 
 export default function EventLog () {
   const {events} = useHelia();
 
   return (
-    <>
-      <h2>Event Log:</h2>
-      <article id="runningLog">
+    <Box alignSelf="left">
+      <Heading as="h2" size="xl">Event Log:</Heading>
+      <List id="runningLog">
         {events.map((event, i) => (
-          <div key={i}>{event}</div>
+          <ListItem key={i}>{event}</ListItem>
         ))}
-      </article>
-    </>
+      </List>
+    </Box>
   )
 }

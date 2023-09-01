@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHelia } from '../hooks/useHelia.ts';
-
+import {Heading} from '@chakra-ui/react'
 //     <h1 id="status">Node status: <span id="statusValue">Not Started</span></h1>
 
 export default function StatusText () {
@@ -10,6 +10,6 @@ export default function StatusText () {
     dhtLabel = dhtMode === "client" ? "DHT Client" : "DHT Server"
   }
   return (
-    <h1 id="status">Node status: <span>{status} - {dhtLabel}</span></h1>
+    <Heading id="status" as="h2" size="xl">Node status: <span>{status} - {dhtLabel}</span></Heading>
   )
 }

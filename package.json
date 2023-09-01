@@ -35,6 +35,8 @@
     "@chainsafe/libp2p-gossipsub": "^10.1.0",
     "@chainsafe/libp2p-noise": "^13.0.0",
     "@chainsafe/libp2p-yamux": "^5.0.0",
+    "@chakra-ui/icons": "^2.1.0",
+    "@chakra-ui/react": "^2.8.0",
     "@helia/unixfs": "^1.4.1",
     "@libp2p/bootstrap": "^9.0.5",
     "@libp2p/kad-dht": "^10.0.5",

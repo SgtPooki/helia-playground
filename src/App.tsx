@@ -3,6 +3,8 @@ import { useHelia } from './hooks/useHelia';
 import StatusText from './components/StatusText';
 import NodeInfo from './components/NodeInfo';
 import EventLog from './components/EventLog';
+import FetchContent from './components/userUtils/FetchContent';
+import { Box, Button, Code, Heading, VStack, Container, StackDivider, UnorderedList, ListItem } from '@chakra-ui/react'
 
 export default function App() {
   const { helia } = useHelia()
@@ -53,61 +55,66 @@ for await (const event of helia.libp2p.services.dht.provide(cid)) {
 
   return (
     <>
-      <h1>IPFS in the Browser via Helia</h1>
-    <div>
-      This page creates an IPFS Helia node in your browser and sets a few other useful components into the
-      global Javascript namespace:
-      <ul>
-        <li><b><em style={{ backgroundColor: '#d7d6d6' }}>helia</em></b> - A helia instance. You can access the <a href="https://www.npmjs.com/package/libp2p" target="_blank">libp2p</a> instance used by helia with <b><em style={{ backgroundColor: '#d7d6d6' }}>helia.libp2p</em></b></li>
-        <li><b><em style={{ backgroundColor: '#d7d6d6' }}>heliaFs</em></b> - A <a href="https://www.npmjs.com/package/@helia/unixfs" target="_blank">@helia/unixFS</a> instance</li>
-        <li><b><em style={{ backgroundColor: '#d7d6d6' }}>discoveredPeers</em></b> - A <b><em style={{ backgroundColor: '#d7d6d6' }}>Map&lt;peerIdString, peerDiscoveryEventDetail&gt;</em></b> that is filled as we discover peers</li>
-      </ul>
-      Open the console to play around with them.
-    </div>
-    <p>
-      Note that opening two tabs of this page in the same browser won't work
-      well, because they will share node configuration. You'll end up trying to
-      run two instances of the same node, with the same private key and
-      identity, which is a Bad Idea.
-    </p>
-    <hr />
-    <div>
-      <button onClick={startHelia}>Start Helia</button>
-      <button onClick={stopHelia}>Stop Helia</button>
-    </div>
-    {/* <h1 id="status">Node status: <span id="statusValue">Not Started</span></h1> */}
-    <StatusText />
-    <NodeInfo />
+    <VStack width="80vw" divider={<StackDivider borderColor='gray.200' />} m="5vw" alignItems="flex-start">
+      <Box>
+        <Heading as="h1" size="2xl">Helia Playground</Heading>
+        <div>
+          This page creates an IPFS Helia node in your browser and sets a few other useful components into the
+          global Javascript namespace:
+          <UnorderedList>
+            <ListItem><b><em style={{ backgroundColor: '#d7d6d6' }}>helia</em></b> - A helia instance. You can access the <a href="https://www.npmjs.com/package/libp2p" target="_blank">libp2p</a> instance used by helia with <b><em style={{ backgroundColor: '#d7d6d6' }}>helia.libp2p</em></b></ListItem>
+            <ListItem><b><em style={{ backgroundColor: '#d7d6d6' }}>heliaFs</em></b> - A <a href="https://www.npmjs.com/package/@helia/unixfs" target="_blank">@helia/unixFS</a> instance</ListItem>
+            <ListItem><b><em style={{ backgroundColor: '#d7d6d6' }}>discoveredPeers</em></b> - A <b><em style={{ backgroundColor: '#d7d6d6' }}>Map&lt;peerIdString, peerDiscoveryEventDetail&gt;</em></b> that is filled as we discover peers</ListItem>
+          </UnorderedList>
+          Open the console to play around with them.
+        </div>
+        <p>
+          Note that opening two tabs of this page in the same browser won't work
+          well, because they will share node configuration. You'll end up trying to
+          run two instances of the same node, with the same private key and
+          identity, which is a Bad Idea.
+        </p>
+      </Box>
+      <Box textAlign={"left"}>
+        <StatusText />
+        <Box>
+          <Button onClick={startHelia} backgroundColor="green.200">Start Helia</Button>
+          <Button onClick={stopHelia} backgroundColor="red.200">Stop Helia</Button>
+        </Box>
+        <NodeInfo />
+      </Box>
 
-    <hr />
+    <FetchContent />
 
-    <h2>Some suggestions</h2>
+    <Box>
+      <Heading as='h2'>Some suggestions</Heading>
 
-    <p>Try adding a new file:</p>
+      <p>Try adding a new file:</p>
 
-    <pre><code className="language-javascript">{addFileExample}</code></pre>
+      <Code display="block" whiteSpace="pre">{addFileExample}</Code>
 
-    <p>
-      You can cat that same file. If you used the exact same string as above
-      ('Hello world!') you should have an hash like this:
-      'bafkreigaknpexyvxt76zgkitavbwx6ejgfheup5oybpm77f3pxzrvwpfdi'
-    </p>
+      <p>
+        You can cat that same file. If you used the exact same string as above
+        ('Hello world!') you should have an hash like this:
+        'bafkreigaknpexyvxt76zgkitavbwx6ejgfheup5oybpm77f3pxzrvwpfdi'
+      </p>
 
-    <pre><code className="language-javascript">{catFileExample}</code></pre>
+      <Code display="block" whiteSpace="pre">{catFileExample}</Code>
 
-    <p>
-      Display the multiaddrs of the peers you've discovered:
-    </p>
-    <pre><code className="language-javascript">{discoveredPeersExample}</code></pre>
+      <p>
+        Display the multiaddrs of the peers you've discovered:
+      </p>
+      <Code display="block" whiteSpace="pre">{discoveredPeersExample}</Code>
 
-    <p>
-      Provide the CIDs you create (once you're connected to a peer)
-    </p>
-    <pre><code className="language-javascript">{dhtProvideExample}</code></pre>
+      <p>
+        Provide the CIDs you create (once you're connected to a peer)
+      </p>
+      <Code display="block" whiteSpace="pre">{dhtProvideExample}</Code>
+    </Box>
 
-    <hr />
-    <EventLog />
+      <EventLog />
 
+    </VStack>
     </>
   )
 }

@@ -10,9 +10,10 @@ import { type UnixFS, unixfs } from '@helia/unixfs'
 import type { Helia } from '@helia/interface'
 
 import getHelia from '../getHelia.ts'
+import { HeliaInstanceType } from '../types'
 
 export interface HeliaContext {
-  helia: Helia | null,
+  helia: HeliaInstanceType | null,
   fs: UnixFS | null,
   error: boolean | null,
   starting: boolean,
@@ -22,10 +23,11 @@ export interface HeliaContext {
   discoveredPeers: any[],
   connectedPeers: any[],
   multiaddrs: any[],
-  events: string[]
+  events: string[],
+  addToEventLog?: (event: string) => void
 }
 
-const defaultContextValues: HeliaContext = {
+const defaultContextValues: Omit<HeliaContext, 'addToEventLog'> = {
   helia: null,
   fs: null,
   error: false,
@@ -38,7 +40,7 @@ const defaultContextValues: HeliaContext = {
   multiaddrs: [],
   events: []
 }
-export const HeliaContext = createContext(defaultContextValues)
+export const HeliaContext = createContext<HeliaContext>(defaultContextValues)
 
 export const HeliaProvider = ({ children }) => {
   const [helia, setHelia] = useState<HeliaContext['helia']>(null)
@@ -53,16 +55,20 @@ export const HeliaProvider = ({ children }) => {
   const [multiaddrs, setMultiaddrs] = useState<HeliaContext['multiaddrs']>([])
   const [events, setEvents] = useState<HeliaContext['events']>([])
 
+  const addToEventLog = useCallback((event: string) => {
+    setEvents((prev) => [...prev, event])
+  }, [])
+
   const startHelia = useCallback(async () => {
     if (helia) {
-      console.info('helia already started');
+      addToEventLog('helia already started');
     } else {
 
     }
   }, [])
   const onBeforeUnload = useCallback(async () => {
     if (helia != null) {
-      console.info('Stopping Helia')
+      addToEventLog('Stopping Helia')
       await helia.stop()
     }
   }, [helia])
@@ -73,7 +79,7 @@ export const HeliaProvider = ({ children }) => {
     }
     async function effect() {
       try {
-        console.info('Starting Helia')
+        addToEventLog('Starting Helia')
         const helia = await getHelia()
         setHelia(helia)
         setFs(unixfs(helia))
@@ -94,11 +100,8 @@ export const HeliaProvider = ({ children }) => {
     if (helia == null) {
       return
     }
-    // @ts-expect-error - broken types
     setDhtMode(await helia.libp2p.services.dht.getMode())
     setStatus(helia.libp2p.isStarted() ? 'Online' : 'Offline')
-    // setConnectedPeers(helia.libp2p.getPeers())
-
   }, [helia])
 
   useEffect(() => {
@@ -117,17 +120,17 @@ export const HeliaProvider = ({ children }) => {
 
     helia.libp2p.addEventListener("peer:discovery", (evt) => {
       setDiscoveredPeers((prev) => [...prev, evt.detail])
-      setEvents((prev) => [...prev, `Discovered peer ${evt.detail.id.toString()}`])
+      addToEventLog(`Discovered peer ${evt.detail.id.toString()}`)
     });
 
     helia.libp2p.addEventListener("peer:connect", (evt) => {
-      setEvents((prev) => [...prev, `Connected to ${evt.detail.toString()}`])
+      addToEventLog(`Connected to ${evt.detail.toString()}`)
       setConnectedPeers((prev) => [...prev, evt.detail])
       setMultiaddrs(helia.libp2p.getMultiaddrs())
     });
 
     helia.libp2p.addEventListener("peer:disconnect", (evt) => {
-      setEvents((prev) => [...prev, `Disconnected from ${evt.detail.toString()}`])
+      addToEventLog(`Disconnected from ${evt.detail.toString()}`)
       setConnectedPeers((prev) => prev.filter((peer) => peer.toString() !== evt.detail.toString()))
       setMultiaddrs(helia.libp2p.getMultiaddrs())
     });
@@ -153,7 +156,8 @@ export const HeliaProvider = ({ children }) => {
         discoveredPeers,
         connectedPeers,
         multiaddrs,
-        events
+        events,
+        addToEventLog
       }}
     >{children}</HeliaContext.Provider>
   )

@@ -3,11 +3,9 @@ import { MemoryDatastore } from "datastore-core";
 import { MemoryBlockstore } from "blockstore-core";
 import { LevelDatastore } from "datastore-level";
 import { LevelBlockstore } from 'blockstore-level';
-import type { Helia } from '@helia/interface';
+import { HeliaInstanceType } from './types';
 
-import { libp2pDefaults } from './libp2p';
-
-let heliaInstance: Helia | null = null;
+let heliaInstance: HeliaInstanceType | null = null;
 export default async () => {
   // application-specific data lives in the datastore
   const datastore = new LevelDatastore(`helia-example-datastore`);
@@ -18,7 +16,6 @@ export default async () => {
   if (heliaInstance != null) {
     return heliaInstance;
   }
-
   heliaInstance = await createHelia({
     // datastore,
     // blockstore,

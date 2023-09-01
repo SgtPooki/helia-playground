@@ -20,9 +20,9 @@ export default async () => {
   }
 
   heliaInstance = await createHelia({
-    datastore,
-    blockstore,
-    libp2p: libp2pDefaults()
+    // datastore,
+    // blockstore,
+    // libp2p: libp2pDefaults()
   });
   // addToLog("Created Helia instance");
 

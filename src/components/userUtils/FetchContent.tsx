@@ -61,9 +61,7 @@ export default function FetchContent () {
 
   }, [cid, fs, timeout])
 
-
   const onCleanup = useCallback(() => {
-    console.log('cleaning up')
     setCid(null)
     setUtilLog(() => [])
   }, [])

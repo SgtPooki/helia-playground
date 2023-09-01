@@ -16,6 +16,7 @@ import { circuitRelayTransport } from 'libp2p/circuit-relay'
 import { identifyService } from 'libp2p/identify'
 import type { PubSub } from '@libp2p/interface-pubsub'
 import type { Libp2pOptions } from 'libp2p'
+import { dcutrService } from 'libp2p/dcutr'
 
 export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubSub, identify: unknown, autoNAT: unknown }> {
   return {
@@ -55,14 +56,15 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
       ipniContentRouting('https://cid.contact')
     ],
     services: {
-      // dcutr: dcutrService({ timeout: 15000 }),
+      // @ts-expect-error - types are borked...
+      dcutr: dcutrService(),
       identify: identifyService(),
       autoNAT: autoNATService(),
       // pubsub: gossipsub(),
       dht: kadDHT({
-        pingTimeout: 1000,
+        pingTimeout: 2000,
         pingConcurrency: 3,
-        kBucketSize: 60,
+        kBucketSize: 20,
         clientMode: true,
         validators: {
           ipns: ipnsValidator

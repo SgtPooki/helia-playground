@@ -4,6 +4,7 @@ import { MemoryBlockstore } from "blockstore-core";
 import { LevelDatastore } from "datastore-level";
 import { LevelBlockstore } from 'blockstore-level';
 import { HeliaInstanceType } from './types';
+import { libp2pDefaults } from './libp2p';
 
 let heliaInstance: HeliaInstanceType | null = null;
 export default async () => {
@@ -16,10 +17,11 @@ export default async () => {
   if (heliaInstance != null) {
     return heliaInstance;
   }
+  // @ts-expect-error - types are borked...
   heliaInstance = await createHelia({
     datastore,
     blockstore,
-    // libp2p: libp2pDefaults()
+    libp2p: libp2pDefaults()
   });
   // addToLog("Created Helia instance");
 

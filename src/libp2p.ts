@@ -61,10 +61,11 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
       identify: identifyService(),
       autoNAT: autoNATService(),
       // pubsub: gossipsub(),
+      // dht: kadDHT(),
       dht: kadDHT({
-        pingTimeout: 2000,
-        pingConcurrency: 3,
-        kBucketSize: 20,
+        // pingTimeout: 2000,
+        // pingConcurrency: 3,
+        // kBucketSize: 20,
         clientMode: true,
         validators: {
           ipns: ipnsValidator

@@ -8,6 +8,13 @@ import type { GetEvents } from '@helia/unixfs';
 
 const defaultTimeoutValue = 5000
 const textDecoder = new TextDecoder()
+
+// See https://github.com/GoogleChromeLabs/jsbi/issues/30
+const stringifyReplacer =
+    BigInt.prototype.toJSON === undefined
+        ? (_, v) => typeof v === 'bigint' ? v.toString() : v
+        : undefined
+
 /**
  * A collapsible section that displays the form for fetching content from IPFS.
  */
@@ -44,7 +51,7 @@ export default function FetchContent () {
       return prev
     })
     if (detail.toString() === '[object Object]') {
-      setUtilLog((prev) => [...prev, `${progEvent.type}: ${JSON.stringify(progEvent.detail)}`])
+      setUtilLog((prev) => [...prev, `${progEvent.type}: ${JSON.stringify(progEvent.detail, stringifyReplacer)}`])
       return
     }
     setUtilLog((prev) => [...prev, `${progEvent.type}: ${progEvent.detail}`])

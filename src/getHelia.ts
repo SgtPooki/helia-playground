@@ -1,6 +1,6 @@
 import { createHelia } from 'helia';
-import { MemoryDatastore } from "datastore-core";
-import { MemoryBlockstore } from "blockstore-core";
+// import { MemoryDatastore } from "datastore-core";
+// import { MemoryBlockstore } from "blockstore-core";
 import { LevelDatastore } from "datastore-level";
 import { LevelBlockstore } from 'blockstore-level';
 import { HeliaInstanceType } from './types';
@@ -13,7 +13,7 @@ export default async () => {
   const blockstore = new LevelBlockstore(`helia-example-blockstore`);
   // const datastore = new LevelDatastore(`helia-example-datastore-${Math.random()}`);
   // const blockstore = new LevelBlockstore(`helia-example-blockstore-${Math.random()}`);
-
+  
   if (heliaInstance != null) {
     return heliaInstance;
   }

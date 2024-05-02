@@ -8,15 +8,14 @@ import { mplex } from '@libp2p/mplex'
 import { webRTC, webRTCDirect } from '@libp2p/webrtc'
 import { webSockets } from '@libp2p/websockets'
 import { webTransport } from '@libp2p/webtransport'
-// import { webTransport } from './webtransport'
 import { ipnsSelector } from 'ipns/selector'
 import { ipnsValidator } from 'ipns/validator'
-import { autoNATService } from 'libp2p/autonat'
-import { circuitRelayTransport } from 'libp2p/circuit-relay'
-import { identifyService } from 'libp2p/identify'
+import { autoNAT } from '@libp2p/autonat'
+import { circuitRelayTransport } from '@libp2p/circuit-relay-v2'
+import { identify } from '@libp2p/identify'
 import type { PubSub } from '@libp2p/interface-pubsub'
 import type { Libp2pOptions } from 'libp2p'
-import { dcutrService } from 'libp2p/dcutr'
+import { dcutr } from '@libp2p/dcutr'
 
 export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubSub, identify: unknown, autoNAT: unknown }> {
   return {
@@ -57,9 +56,9 @@ export function libp2pDefaults (): Libp2pOptions<{ dht: DualKadDHT, pubsub: PubS
     ],
     services: {
       // @ts-expect-error - types are borked...
-      dcutr: dcutrService(),
-      identify: identifyService(),
-      autoNAT: autoNATService(),
+      dcutr: dcutr(),
+      identify: identify(),
+      autoNAT: autoNAT(),
       // pubsub: gossipsub(),
       // dht: kadDHT(),
       dht: kadDHT({

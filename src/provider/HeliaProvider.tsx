@@ -101,7 +101,7 @@ export const HeliaProvider = ({ children }) => {
       return
     }
     setDhtMode(await helia.libp2p.services.dht.getMode())
-    setStatus(helia.libp2p.isStarted() ? 'Online' : 'Offline')
+    setStatus(helia.libp2p.status === "started" ? 'Online' : 'Offline')
     setStarting(false)
   }, [helia])
 

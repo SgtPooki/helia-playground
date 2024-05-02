@@ -9,7 +9,7 @@ export default defineConfig({
     // disable @rollup/plugin-commonjs https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
     // should be removable with vite 4 https://vitejs.dev/blog/announcing-vite3.html#esbuild-deps-optimization-at-build-time-experimental
     commonjsOptions: {
-      include: [],
+      transformMixedEsModules: true,
     },
 
     // // https://vitejs.dev/guide/backend-integration.html#backend-integration

@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   nodeUpdateInterval = setInterval(async () => {
-    let statusText = helia.libp2p.isStarted() ? "Online" : "Offline";
+    let statusText = helia.libp2p.status === "started" ? "Online" : "Offline";
     const dhtMode = await helia.libp2p.services.dht.getMode();
     statusText = `${statusText} - ${
       dhtMode === "client" ? "DHT Client" : "DHT Server"
